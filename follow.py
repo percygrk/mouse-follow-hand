@@ -7,23 +7,6 @@ mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(static_image_mode=False, max_num_hands=2, min_detection_confidence=0.5, min_tracking_confidence=0.5)
 mp_drawing = mp.solutions.drawing_utils
 
-def check_thumb_up(hand_landmarks, distance_mcp):
-    thumb_tip = hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].y
-    other_fingertips = [
-        hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y,
-        hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y,
-        hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_TIP].y,
-        hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].y
-    ]
-    # Check if the thumb tip is higher than the other fingertips
-    return all(thumb_tip < fingertip for fingertip in other_fingertips)
-
-
-
-
-
-
-
 # Initialize video capture
 cap = cv2.VideoCapture(0)
 
@@ -54,19 +37,6 @@ while cap.isOpened():
             finger_mcp = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP]
 
 
-            def check_stop_gesture(hand_landmarks):
-                # Get the y-coordinate of each fingertip
-                finger_tips_y = [
-                    hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].y,
-                    hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y,
-                    hand_landmarks.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y,
-                    hand_landmarks.landmark[mp_hands.HandLandmark.RING_FINGER_TIP].y,
-                    hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_TIP].y
-                ]
-                # Check if the y-coordinates of the finger tips are relatively level
-                return max(finger_tips_y) - min(finger_tips_y) < 0.25
-
-                # Convert to pixel coordinates
 
 
             finger_coords = (int(finger_tip.x * frame.shape[1]), int(finger_tip.y * frame.shape[0]))
